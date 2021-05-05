@@ -1,0 +1,72 @@
+{% load static %}
+{% block content %}
+{% block extracss %}
+
+<link href="{% static 'Datatables/media/css/jquery.dataTables.css' %}" rel="stylesheet">
+<link href="{% static 'styles.css' %}" rel="stylesheet">
+
+
+{% endblock %}
+    <div class="header">
+        <h1>Stocks Metrics</h1>
+    </div>
+
+    <div class="body">
+        <div class="content-app">
+            <div class="table-title">
+                <h2>Stocks list</h2>
+            </div>
+        <table id="stocks-table" class="display">
+            <thead>
+                <tr>
+                    <th>Stock</th>
+                    <th>Description</th>
+                    <th>Last Closing Price</th>
+                    <th>52w High</th>
+                    <th>Price vs 52w High</th>
+                    <th>Rank</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for key, value in json_pretty.items %}
+                    <tr>
+                        <td>{{key}}</td>
+                        <td>{{value.desc}}</td>
+                        <td>{{value.closing}}</td>
+                        <td>{{value.fiftyTwoHigh}}</td>
+                        <td>{{value.priceToFiftyTwoHigh}}</td>
+                        <td>{{value.rank}}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        </div>
+   </div>
+
+
+
+
+<script src="{% static 'Datatables/media/js/jquery-3.6.0.js' %}"></script>
+<script src="{% static 'Datatables/media/js/jquery.dataTables.js' %}"></script>
+ <script>
+$(document).ready( function () {
+    $('#stocks-table').DataTable({
+    'rowCallback': function(row, data, index){
+    if(data[5]< 10){
+        $(row).find('td').css('background-color', 'rgba(0,255,0,0.1)');
+    }
+    }
+    });
+    $('#stocks-table tbody')
+        .on( 'mouseenter', 'td', function () {
+            var colIdx = table.cell(this).index().column;
+
+            $( table.cells().nodes() ).removeClass( 'highlight' );
+            $( table.column( colIdx ).nodes() ).addClass( 'highlight' );
+        } );
+
+
+} );
+</script>
+
+{% endblock %}
